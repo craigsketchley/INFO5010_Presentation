@@ -33,7 +33,13 @@
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
+		<style type="text/css">
+		h1, h2, h3, h4, h5, h6, p, li { text-align: left; }
+		</style>
+
 	</head>
+
+
 
 	<body>
 
@@ -55,22 +61,44 @@
 				</section>
 
 				<section id="introduction">
-					<h2>Introduction</h2>
-					<h4>What is STAR?</h4>
-					<p>
-						"Spliced Transcripts Alignment to a Reference" (STAR)
-					</p>
+					<section id="RNAseq">
+						<h2>RNA-Seq</h2>
+							<p class="fragment roll-in">RNA produced by splicing exons</p>
+							<p class="fragment roll-in">Transcriptome reordered</p>
+							<p class="fragment roll-in">High throughput sequencing challenging to detect and characterise</p>
+							<p class="fragment roll-in">Two key tasks:
+								<ul>
+									<li class="fragment roll-in">Accurate alignment</li>
+									<li class="fragment roll-in">Mapping sequences from non-contiguous regions</li>
+								</ul>
 
-					<aside class="notes">
-						Write some speaker notes...
-					</aside>
+							</p>
+						<aside class="notes" data-markdown>
+							Transcriptome = all RNA (m/r/t).
+
+							Accurate alignment - containing mismatches, insertions and deletions.
+						</aside>
+					</section>
+
+					<section id="star">
+						<h2>What is STAR?</h2>
+							<p class="fragment roll-in">"Spliced Transcripts Alignment to a Reference" (STAR)</p>
+							<p class="fragment roll-in"></p>
+						<aside class="notes">
+							Write some speaker notes...
+						</aside>
+					</section>					
 				</section>
 
 				<section id="algoithm">
 					<section id="algoithmIntro">
 						<h2>Algorithm</h2>
-						<p>
-							Intro to the algorithm section...
+						<p class="fragment roll-in">
+							The STAR algorithm consists of 2 main steps.
+							<ul>
+								<li class="fragment roll-in">Seed Search</li>
+								<li class="fragment roll-in">Clustering, stitching and scoring</li>
+							</ul>
 						</p>
 
 						<aside class="notes">
@@ -81,7 +109,7 @@
 					<section id="algoithmSeed">
 						<h2>Seed Search</h2>
 						<p>
-							Write about the seed search algorithm...						
+							Write about the seed search part of the algorithm...						
 						</p>
 
 						<aside class="notes">
@@ -90,9 +118,9 @@
 					</section>
 
 					<section id="algoithmClustering">
-						<h2>Algorithm</h2>
+						<h2>Clustering, Stitching and Scoring</h2>
 						<p>
-							Write about the clustering algorithm...						
+							Write about the clustering part of the algorithm...						
 						</p>
 
 						<aside class="notes">
@@ -115,7 +143,7 @@
 				<section id="discussion">
 					<h2>Discussion</h2>
 					<p>
-						Write the intro...						
+						Summerise the discussion...					
 					</p>
 
 					<aside class="notes">
@@ -144,8 +172,8 @@
 				slideNumber: true,
 
 				// Parallax scrolling
-				parallaxBackgroundImage: 'images/background-grass.jpg',
-				parallaxBackgroundSize: '2100px 900px',
+				// parallaxBackgroundImage: 'images/background-grass.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
 				// parallaxBackgroundImage: 'images/background-snow.jpg',
 				// parallaxBackgroundSize: '2560px 1440px',
 				// parallaxBackgroundImage: 'images/background-lights.jpg',
