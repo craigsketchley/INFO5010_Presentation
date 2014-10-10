@@ -208,6 +208,7 @@
             <h3>Clustering, Stitching and Scoring</h3>
             <p class="fragment fade">Cluster seeds around a selected anchor seed.</p>
             <p class="fragment fade">Anchor seeds are selected by minimising the number of genomic mappings.</p>
+            <p class="fragment fade">Seeds are then stitched together using a local-linear transcription model.</p>
             <video class="fragment fade" width="480px" height="300px" controls>
               <source src="video/cluster.mov" type="video/mp4">
               Your browser does not support the video tag.
@@ -220,9 +221,11 @@
 
               Anchors are selected from the seeds that have the minimum number of genomic mappings. This prioritises seeds that are not as "multi-mapped".
 
-              The seeds that map within a user-defined genomic window are stitched together using the local-linear transcription model (genomic ordering of local seeds maintained, with no overlaps).
+              The seeds that map within a user-defined genomic window are stitched together using the...
 
-              The size of the genomic window determines the max intron size for spliced alignments.
+              local-linear transcription model (genomic ordering of local seeds maintained, with no overlaps).
+
+              Seeds are stitched 
             </aside>
           </section>
 
@@ -275,10 +278,15 @@
 
             </p>
             <p class="fragment fade">
-              $N =$ number of reads required across a splice junction for it to be recognised as a splice, from 1 to 100.
+              Varying $N$, the number of reads required across a splice junction for it to be recognised as a splice, from 1 to 100.
             </p>
+            <p class="fragment fade">All ROC curves exhibit desirable results.</p>
             <aside class="notes" data-markdown>
+              README!!!
+
               Initially, they used simulated data to accurately benchmark all the mappers; they know exactly what mapping to expect.
+
+              Data included: genomic variations and sequencing errors.
 
               __de novo__
               - from the beginning - without any knowledge of the genome/transcript. -- String comparison.
@@ -294,14 +302,13 @@
               "All aligners exhibit desirable steep ROC curves at high values of detection threshold."
                 
               "At the lowest detection threshold of 1 read per junction, STAR exhibits the lowest false-positive rate while achieving high sensitivity."
-
             </aside>
           </section>
 
           <section id="resultsExperimental1">
             <h2>Results</h2>
             <h3>Performance on Experimental Data</h3>
-            <p class="fragment fade">All mappers were run on an ENCODE long RNA-seq dataset.</p>
+            <p class="fragment fade">All mappers were run on an ENCODE (Encyclopaedia of DNA Elements) long RNA-seq dataset.</p>
             <p class="fragment fade">Percentage of reads aligned:
               <ul class="fragment fade">
                 <li>STAR - 94%</li>
@@ -334,32 +341,7 @@
             </p>
 
             <aside class="notes" data-markdown>
-              Focus
-
-
-
-              ### a
-              Total number of detected junctions, annotated (solid lines) and unannotated (dashed lines).
-
-              ### b
-              percentage of detected junctions that are annotated.
-
-              ### c
-              pseudo-ROC curve: percentage of all annotated junctions that are detected versus percentage of detected junctions that are unannotated.
-
-              ### d
-              number of unannotated junctions detected by at least two mappers (solid lines) and number of unannotated junctions detected exclusively by only one mapper (dashed lines).
-
-              ### e
-              percentage of detected unan- notated junctions that are detected exclusively by only one mapper.
-
-              ### f
-              pseudo-ROC curve: percentage of unannotated junctions that are detected by at least two mappers versus percentage of detected unannotated junctions that are detected exclusively by only one mapper.
-
-
-              assumption that junctions detected by only one aligner are more likely to be false positive than the junctions detected by two or more aligners
-
-              default parameters are optimized for mammalian genomes. Other species may require significant modifications of some alignment parameters; in particular, the maximum and minimum intron sizes have to be reduced for organisms with smaller introns.
+              NO NOTES.
             </aside>
           </section>
 
@@ -369,15 +351,14 @@
             <img src="images/fig3ef.png" alt="plots">
             <aside class="notes" data-markdown>
               ### e
-              percentage of detected unan- notated junctions that are detected exclusively by only one mapper.
+              percentage of detected unannotated junctions that are detected exclusively by only one mapper.
 
               ### f
               pseudo-ROC curve: percentage of unannotated junctions that are detected by at least two mappers versus percentage of detected unannotated junctions that are detected exclusively by only one mapper.
 
-              ## Negatives
-              assumption that junctions detected by only one aligner are more likely to be false positive than the junctions detected by two or more aligners
+              ### Potential Problems
+              assumption that junctions detected by only one aligner are more likely to be false positive than the junctions detected by two or more aligners - these definitions are not rigorous because the true/false assessments cannot be made for experimental data
 
-              default parameters are optimized for mammalian genomes. Other species may require significant modifications of some alignment parameters; in particular, the maximum and minimum intron sizes have to be reduced for organisms with smaller introns.
             </aside>
           </section>
 
@@ -410,7 +391,7 @@
             <h2>Results</h2>
             <h3>Experimental Validation</h3>
             <p class="fragment fade">
-              STAR was validated on data as part of the ENCODE (Encyclopaedia of DNA Elements) and compared against BLAT (a popular mRNA aligner).
+              STAR was validated on data as part of the ENCODE and compared against BLAT (a popular mRNA aligner).
             </p>
             <p class="fragment fade">
               Similar or higher accuracy to BLAT.
@@ -420,8 +401,7 @@
             </p>
 
             <aside class="notes" data-markdown>
-              BLAT, a popular mRNA aligner.
-
+              No NOtes.
             </aside>
           </section>
 
