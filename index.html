@@ -71,22 +71,19 @@
 
           <section id="RNAseq">
             <h2>Motivation</h2>
-            <h3 class="fragment roll-in">The Problem: RNA-Seq</h3>
-            <img class="fragment roll-in" width="300px" align="right" src="images/rna-seq2.png">
-            <p class="fragment roll-in">RNA-seq: sequencing the mRNA within a cell at a given point in time:
+            <h3 class="fragment fade">The Problem: RNA-Seq</h3>
+            <p class="fragment fade">RNA-seq: sequencing the mRNA within a cell at a given point in time.</p>
+            <p class="fragment fade"><img width="300px" align="right" src="images/rna-seq2.png">
+              mRNA is not transcribed from a single contiguous section in DNA.
+            </p>
+            <p class="fragment fade">How do you accurately identify splice sites?</p>
+            <p class="fragment fade">High-throughput sequencing also makes it challenging to detect &amp; characterise splice sites.</p>
+            <p class="fragment fade">Two key tasks:
               <ul>
-                <li class="fragment roll-in">Identify where in the genome</li>
-                <li class="fragment roll-in">Characterisation of gene expression</li>
+                <li class="fragment fade">Accurate alignment</li>
+                <li class="fragment fade">Mapping sequences from non-contiguous regions</li>
               </ul>
             </p>
-            <p class="fragment roll-in">High-throughput sequencing challenging to detect &amp; characterise spliced transcripts</p>
-            <p class="fragment roll-in">Two key tasks:
-              <ul>
-                <li class="fragment roll-in">Accurate alignment</li>
-                <li class="fragment roll-in">Mapping sequences from non-contiguous regions</li>
-              </ul>
-            </p>
-            <p class="fragment roll-in">Further challenges include presence of multiple copies of exons</p>
             <aside class="notes" data-markdown>
               # RNA
 
@@ -106,11 +103,12 @@
 
           <section id="currentAlgo">
             <h2>Background</h2>
-            <h3 class="fragment roll-in">Current Algorithmic Solutions</h3>
-            <p class="fragment roll-in">Offer compromises in either <span class="fragment highlight-red">accuracy</span> or <span class="fragment highlight-red">resources required</span></p>
-            <p class="fragment roll-in">Computational component becoming bottleneck</p>
-            <p class="fragment roll-in">Mostly designed for short reads (&le; 200 bases)</p>
-            <p class="fragment roll-in">Not great for "Third Generation Sequencing" (potentially full length reads)</p>
+            <h3 class="fragment fade">Current Algorithmic Solutions</h3>
+            <p class="fragment fade">Extended DNA mapping solutions.</p>
+            <p class="fragment fade">Offer compromises in either <span class="fragment highlight-red">accuracy</span> or <span class="fragment highlight-red">resources required</span>.</p>
+            <p class="fragment fade">Computational component becoming bottleneck.</p>
+            <p class="fragment fade">Mostly designed for short reads (&le; 200 bases).</p>
+            <p class="fragment fade">Not great for "Third Generation Sequencing" (potentially full length reads).</p>
 
             <aside class="notes" data-markdown>
               # TODO:
@@ -119,12 +117,14 @@
 
           <section id="STAR">
             <h2>What is STAR?</h2>
-              <p class="fragment roll-in">"Spliced Transcripts Alignment to a Reference" (STAR)</p>
-              <p class="fragment roll-in">Specifically designed to align non-contiguous sequences to a reference genome</p>
+              <p class="fragment fade">A tool specifically designed to align non-contiguous sequences to a reference genome.</p>
+              <p class="fragment fade">"Spliced Transcripts Alignment to a Reference" (STAR)</p>
             <aside class="notes" data-markdown>
               It stands for ...
 
               It's specifically designed...
+
+              Computational bottleneck - too slow or run out of RAM.
             </aside>
           </section>
 
@@ -135,10 +135,10 @@
           <section id="algoithmIntro">
             <h2>Method</h2>
             <h3>Overview</h3>
-            <p class="fragment roll-in">The STAR algorithm consists of 2 main steps:
+            <p class="fragment fade">The STAR algorithm consists of 2 main steps:
               <ul>
-                <li class="fragment roll-in">Seed Search</li>
-                <li class="fragment roll-in">Clustering, stitching &amp; scoring</li>
+                <li class="fragment fade">Seed Search</li>
+                <li class="fragment fade">Clustering, stitching &amp; scoring</li>
               </ul>
             </p>
             <aside class="notes" data-markdown>
@@ -151,10 +151,10 @@
           <section id="algoithmSeed1">
             <h2>Method</h2>
             <h3>Seed Search Algorithm</h3>
-            <p class="fragment roll-in">Searching for seeds involves a sequential search for the Maximum Mappable Prefix ($MMP$).</p>
-            <p class="fragment roll-in">
+            <p class="fragment fade">Searching for seeds involves a sequential search for the Maximum Mappable Prefix ($MMP$).</p>
+            <p class="fragment fade">
               The $MMP$ is calculated as follows:
-              <blockquote class="fragment roll-in">
+              <blockquote class="fragment fade">
                 Given a read sequence $R$, read location $i$ and a reference genome sequence $G$, the $MMP(R,i,G)$ is defined as the longest substring $(R_i,R_{i+1},\dots,R_{i+MML-1})$ that matches exactly one or more substrings of $G$, where $MML$ is the Maximum Mappable Length.
               </blockquote>
             </p>
@@ -164,7 +164,7 @@
 
               [read the algo]
 
-              That didn't make a whole lot of sense to me straight away so I'll demostrate this with a diagram...
+              That didn't make a whole lot of sense to me straight away so I'll demonstrate this with a diagram...
             </aside>
           </section>
 
@@ -181,7 +181,7 @@
               </video>
             </p>
             <br />
-            <p class="fragment roll-in">
+            <p class="fragment fade">
               The search is implemented using a suffix array for the reference genome; the read sequence is then threaded through.
             </p>
 
@@ -189,27 +189,27 @@
               ## Basic Idea
               - Once the MMP is found, this is a splice location, rerun this on the remainder of the read sequence that is not mapped [show diagram].
 
+              - Search is performed forwards and backwards on the read, and also can be started from a user defined position to facilitate finding anchors with errors at the ends.
+
+              ## Figure
               - This approach can also help finding mismatches/indels. Run a sequence, if it doesn't reach the end, expand the "anchor" allowing for mismatches (what about indels?).
 
               - Poor alignment from this procedure can help identify sequence traits such as poly-A tails (+AAAAAAA), library adapters (???) or just poor sequencing.
 
-              - Search is performed forwards and backwards on the read, and also can be started from a user defined position to facilitate finding anchors with errors at the ends.
-
+              ## SA
               - The uncompressed SA offer a speed advantage with a trade off for space. Which we'll come to in the results section.
+              - Build a suffix array of the reference genome and thread the read sequence through the array for a given read position.
 
-              - Build a suffix array (slightly more efficient that a suffix tree) of the reference genome and thread the read sequence through the array for a given read position.
-
-              TODO: GO OVER suffix arrays?
             </aside>
           </section>
 
-          <section id="algoithmClustering">
+          <section id="algoithmClustering1">
             <h2>Method</h2>
             <h3>Clustering, Stitching and Scoring</h3>
-            <p class="fragment roll-in">Cluster seeds around a selected anchor seed.</p>
-            <p class="fragment roll-in">Anchor seeds are selected by minimising the number of genomic mappings.</p>
-            <video class="fragment roll-in" width="480px" height="300px" controls>
-              <source src="video/clust.mov" type="video/mp4">
+            <p class="fragment fade">Cluster seeds around a selected anchor seed.</p>
+            <p class="fragment fade">Anchor seeds are selected by minimising the number of genomic mappings.</p>
+            <video class="fragment fade" width="480px" height="300px" controls>
+              <source src="video/cluster.mov" type="video/mp4">
               Your browser does not support the video tag.
             </video>
 
@@ -220,13 +220,27 @@
 
               Anchors are selected from the seeds that have the minimum number of genomic mappings. This prioritises seeds that are not as "multi-mapped".
 
-              The seeds that map within a user-defined genomic window are stiched together using the local-linear transcription model (genomic ordering of local seeds maintained, with no overlaps).
+              The seeds that map within a user-defined genomic window are stitched together using the local-linear transcription model (genomic ordering of local seeds maintained, with no overlaps).
 
-              The size of the genomic window determines the max introm size for spliced allignments.
+              The size of the genomic window determines the max intron size for spliced alignments.
+            </aside>
+          </section>
 
+          <section id="algoithmClustering2">
+            <h2>Method</h2>
+            <h3>Clustering, Stitching and Scoring cont.</h3>
+            <p class="fragment">Stitching is guide by a local alignment score.</p>
+            <p class="fragment">$S = +\sum_{m}P_m - \sum_{mm}P_{mm} - \sum_{ins}P_{ins} - \sum_{del}P_{del} - \sum_{gap}P_{gap}$</p>
+            <p class="fragment">$P_{ins/del} = P_{ins/del}^{open} +  P_{ins/del}^{extend} . L_{ins/del}$</p>
+            <p class="fragment fade"><img class="fragment fade" width="420px" align="right" src="images/chimeric.png" />If one genomic window is not enough to map the entire read sequence, another anchor is chosen and clustering applied again.</p>
+            <p class="fragment fade">This results in a chimeric read; where the mRNA is spliced from 2 distal parts of the genome.</p>
+
+            <aside class="notes" data-markdown>
               If one window is not enough to cover the read sequence, then the alignment is expanded to include another window - resulting in a chimeric read. A join of 2 separate exons from potentially different parts of the genome (diff. chromosome?), joining to form at RNA.
 
               The stitching is guided by a local alignment scoring scheme that includes user-defined scores for mis/matches and indels.
+
+              It uses 'Affine Gap' for short insertions and deletions. User defined minimum, otherwise a splice.
             </aside>
           </section>
         </section>
@@ -235,13 +249,12 @@
 
           <section id="resultsIntro">
             <h2>Results</h2>
-            <h3>Method</h3>
-            <p class="fragment roll-in">The paper compared STAR 2.1.3 results with 4 other popular RNA-seq mappers:
+            <p class="fragment fade">The paper compared STAR 2.1.3 results with 4 other popular RNA-seq mappers:
               <ul>
-                <li class="fragment roll-in">TopHat 2.0.0</li>
-                <li class="fragment roll-in">GSNAP 2012-07-03</li>
-                <li class="fragment roll-in">RUM 1.11</li>
-                <li class="fragment roll-in">MapSplice</li>
+                <li class="fragment fade">TopHat 2.0.0</li>
+                <li class="fragment fade">GSNAP 2012-07-03</li>
+                <li class="fragment fade">RUM 1.11</li>
+                <li class="fragment fade">MapSplice</li>
               </ul>
             </p>
 
@@ -253,18 +266,17 @@
           <section id="resultsSimulated">
             <h2>Results</h2>
             <h3>Performance on Simulated Data</h3>
-            <img class="fragment fade" width="420px" align="right" src="images/fig2.png">
-            <p class="fragment roll-in">Simulated data allows for accurate expected results.</p>
-            <p class="fragment roll-in">
+            <p class="fragment fade">Simulated data allows for accurate expected results.</p>
+            <p class="fragment fade">
               All aligners were run in <em class="fragment highlight-red">de novo</em> mode with <em class="fragment highlight-red">default parameters</em>.
             </p>
-            <p class="fragment roll-in">
-              "All aligners exhibit desirable steep ROC curves at high values of detection threshold."
-            </p>
-            <p class="fragment roll-in">
-              "At the lowest detection threshold of 1 read per junction, STAR exhibits the lowest false-positive rate while achieving high sensitivity."
-            </p>
+            <p class="fragment fade">
+              <img class="fragment fade" width="420px" align="right" src="images/fig2.png" />ROC curves plot true positive vs. false positive.
 
+            </p>
+            <p class="fragment fade">
+              $N =$ number of reads required across a splice junction for it to be recognised as a splice, from 1 to 100.
+            </p>
             <aside class="notes" data-markdown>
               Initially, they used simulated data to accurately benchmark all the mappers; they know exactly what mapping to expect.
 
@@ -274,45 +286,142 @@
               __default parameters__
               - commonly accepted practice, since all aligners should have been optimised for mammalian genomes and RNA-seq data.
 
+              ### ROC curve:
+              - Plots the true positive (a classification hit), vs. a false positive (a misclassification, or false alarm).
+              - Varies with a detection/discrimination threshold.
+              - In this case, the plot is varying the number of reads required across a splice junction for it to be recognised as a splice, from 1 to 100. HOW MUCH EVIDENCE REQUIRED FOR A SPLICE.
+
+              "All aligners exhibit desirable steep ROC curves at high values of detection threshold."
+                
+              "At the lowest detection threshold of 1 read per junction, STAR exhibits the lowest false-positive rate while achieving high sensitivity."
+
             </aside>
           </section>
 
-          <section id="results2">
+          <section id="resultsExperimental1">
             <h2>Results</h2>
             <h3>Performance on Experimental Data</h3>
-            <img src="images/fig3.png">           
-            <p>
-              Write about the results...            
+            <p class="fragment fade">All mappers were run on an ENCODE long RNA-seq dataset.</p>
+            <p class="fragment fade">Percentage of reads aligned:
+              <ul class="fragment fade">
+                <li>STAR - 94%</li>
+                <li>GSNAP - 94%</li>
+                <li>RUM - 86%</li>
+                <li>MapSplice - 85%</li>
+                <li>TopHat2 - 71%</li>
+              </ul>
             </p>
 
             <aside class="notes" data-markdown>
-              Write some speaker notes...
+            </aside>
+          </section>
+
+          <section id="resultsExperimental2">
+            <h2>Results</h2>
+            <h3>Performance on Experimental Data cont.</h3>
+            <p class="fragment fade">To measure accuracy, the plots included a pseudo-ROC.</p>
+            <p class="fragment fade">It plotted the follow against each other:
+              <ul>
+                <li class="fragment fade">the number of junctions detected by at least two mappers (pseudo-true positive)</li>
+                <li class="fragment fade">the number of junctions detected exclusively by each mapper (pseudo-false positive)</li>
+              </ul>
+            </p>
+            <p class="fragment fade">The Idea:
+              <ul>
+                <li class="fragment fade">If another mapper detected the junction, then it's probably correct.</li>
+                <li class="fragment fade">If no other mapper detected a junction, then it's probably wrong.</li>
+              </ul>
+            </p>
+
+            <aside class="notes" data-markdown>
+              Focus
+
+
+
+              ### a
+              Total number of detected junctions, annotated (solid lines) and unannotated (dashed lines).
+
+              ### b
+              percentage of detected junctions that are annotated.
+
+              ### c
+              pseudo-ROC curve: percentage of all annotated junctions that are detected versus percentage of detected junctions that are unannotated.
+
+              ### d
+              number of unannotated junctions detected by at least two mappers (solid lines) and number of unannotated junctions detected exclusively by only one mapper (dashed lines).
+
+              ### e
+              percentage of detected unan- notated junctions that are detected exclusively by only one mapper.
+
+              ### f
+              pseudo-ROC curve: percentage of unannotated junctions that are detected by at least two mappers versus percentage of detected unannotated junctions that are detected exclusively by only one mapper.
+
+
+              assumption that junctions detected by only one aligner are more likely to be false positive than the junctions detected by two or more aligners
+
+              default parameters are optimized for mammalian genomes. Other species may require significant modifications of some alignment parameters; in particular, the maximum and minimum intron sizes have to be reduced for organisms with smaller introns.
+            </aside>
+          </section>
+
+          <section id="resultsExperimental3">
+            <h2>Results</h2>
+            <h3>Performance on Experimental Data cont.</h3>
+            <img src="images/fig3ef.png" alt="plots">
+            <aside class="notes" data-markdown>
+              ### e
+              percentage of detected unan- notated junctions that are detected exclusively by only one mapper.
+
+              ### f
+              pseudo-ROC curve: percentage of unannotated junctions that are detected by at least two mappers versus percentage of detected unannotated junctions that are detected exclusively by only one mapper.
+
+              ## Negatives
+              assumption that junctions detected by only one aligner are more likely to be false positive than the junctions detected by two or more aligners
+
+              default parameters are optimized for mammalian genomes. Other species may require significant modifications of some alignment parameters; in particular, the maximum and minimum intron sizes have to be reduced for organisms with smaller introns.
             </aside>
           </section>
 
           <section id="resultsSpeed">
             <h2>Results</h2>
             <h3>Speed Comparison</h3>
-            <p class="fragment roll-in">Tests completed on a "two 6-core Intel Xeon CPUs X5680@ 3.33GHz and 148GB of RAM".</p>
-            <img class="fragment roll-in" width="450px" align="right" src="images/table1.png">
-            <p class="fragment roll-in">All mappers were run with default parameters on the ~40 million 2 x 76 Illumina human RNA-seq dataset.
+            <img class="fragment fade" width="450px" align="right" src="images/table1.png" />
+            <p class="fragment fade">All mappers were run with default parameters on the ~40 million 2 x 76 Illumina human RNA-seq dataset.
             </p>
+            <p class="fragment fade">Close to linear scaling of the throughput rate with the number of threads.</p>
+            <p class="fragment fade">STAR with 12 threads ~= 45 million reads per thread per hour.</p>
+            <p class="fragment fade">RAM usage more than most, ~27GB RAM for human genome.</p>
+            <p class="fragment fade">STAR has a sparse options to reduce RAM usage, for less speed.</p>
 
             <aside class="notes" data-markdown>
-              Write some speaker notes...
+              ## Setup
+              - Tests completed on a "two 6-core Intel Xeon CPUs X5680@ 3.33GHz and 148GB of RAM"
+              - Mappers ran with default parameters again on the same experimental dataset as before.
+
+              ## Observations:
+              - Close to linear scaling of STAR; losing ~10% off per thread mapping speed.
+              - Pretty impressive; so even 1 thread outperforms next closest mapper.
+              - ~27GB RAM for human genome. Still within a reasonable level.
+              - Sparse decreases speed by ~25% within sacrificing accuracy.
+
             </aside>
           </section>
 
           <section id="resultsExperimental">
             <h2>Results</h2>
-            <h3>Experimental Evaluation</h3>
-            <img src="images/table2.png">           
-            <p>
-              Write about the results...            
+            <h3>Experimental Validation</h3>
+            <p class="fragment fade">
+              STAR was validated on data as part of the ENCODE (Encyclopaedia of DNA Elements) and compared against BLAT (a popular mRNA aligner).
+            </p>
+            <p class="fragment fade">
+              Similar or higher accuracy to BLAT.
+            </p>
+            <p class="fragment fade">
+              2 x faster than BLAT, important for high-throughput sequencing.
             </p>
 
             <aside class="notes" data-markdown>
-              Write some speaker notes...
+              BLAT, a popular mRNA aligner.
+
             </aside>
           </section>
 
@@ -320,14 +429,23 @@
 
         <section id="discussion">
           <h2>Discussion</h2>
-          <p>Aligning non-contiguous RNA-seq data to a reference genome is hard. It's still unsolved.</p>
-          <p>STAR is a stand-alone C++ RNA-seq mapper.</p>
-
+          <p class="fragment fade">Aligning non-contiguous RNA-seq data to a reference genome is hard. It remains unsolved.</p>
+          <p class="fragment fade">STAR is:
+            <ul>
+              <li class="fragment fade">a stand-alone C++ RNA-seq mapper.</li>
+              <li class="fragment fade">multi-threaded, fast and scalable.</li>
+              <li class="fragment fade">accurate.</li>
+              <li class="fragment fade">extensible to longer reads.</li>
+              <li class="fragment fade">able to align reads from a continuous stream (high-throughput).</li>
+            </ul>
+          </p>
           <aside class="notes" data-markdown>
-            - Stand-alone RNA-seq mapper -- E.G. not a modified DNA mapper.
-            - 
-
+            - Stand-alone RNA-seq mapper -- E.G. not an extended DNA mapper.
           </aside>
+        </section>
+
+        <section id="theEnd">
+          <h1>The End</h1>
         </section>
 
       </div>
@@ -349,20 +467,6 @@
         theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
         transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/fade/none
         slideNumber: true,
-
-        // Parallax scrolling
-        // parallaxBackgroundImage: 'images/background-grass.jpg',
-        // parallaxBackgroundSize: '2100px 900px',
-        // parallaxBackgroundImage: 'images/background-snow.jpg',
-        // parallaxBackgroundSize: '2560px 1440px',
-        // parallaxBackgroundImage: 'images/background-lights.jpg',
-        // parallaxBackgroundSize: '2560px 1600px',
-        // parallaxBackgroundImage: 'images/background-stars.jpg',
-        // parallaxBackgroundSize: '4000px 2667px',
-        // parallaxBackgroundImage: 'images/background-stars2.jpg',
-        // parallaxBackgroundSize: '1920px 1280px',
-        // parallaxBackgroundImage: 'images/background-stars3.jpg',
-        // parallaxBackgroundSize: '2560px 1600px',
 
         // Optional libraries used to extend on reveal.js
         dependencies: [
